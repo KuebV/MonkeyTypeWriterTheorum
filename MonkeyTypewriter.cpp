@@ -51,14 +51,14 @@ void monkeyType(int threadID) {
 
         // Updates the status every 1000 documents completed
         if (documents % 1000 == 0)
-            std::cout << "[Monkey: " << threadID << "] has completed " << documents << " documents in " << microseconds.count() << " ms" << std::endl << std::endl;;
+            std::cout << "[Monkey: " << threadID << "] has completed " << documents << " documents in " << microseconds.count() << " ms\n\n";
 
         //If the string is found, then stop the process.
         if (str.find(globalString) != std::string::npos) {
             std::ofstream file(generateFileName(documents, threadID, ".txt").c_str());
             if (file.is_open()) {
                 file << "Document: " << documents << " with ThreadID: " << threadID << " has found \"" << globalString << "\"\n";
-                file << str << std::endl;
+                file << str << "\n";
                 file.close();
             }
             stringFound = true;
@@ -69,7 +69,7 @@ void monkeyType(int threadID) {
             std::ofstream file(generateFileName(documents, threadID, ".txt").c_str());
             if (file.is_open()) {
                 file << "Document: " << documents << " with ThreadID: " << threadID << " has found \"" << globalString << "\"\n";
-                file << str << std::endl;
+                file << str << "\n";
                 file.close();
             }
         }
@@ -81,10 +81,10 @@ void monkeyType(int threadID) {
 int main()
 {
     // User Input for what the program is looking for
-    std::cout << "What are you looking for?" << std::endl;
+    std::cout << "What are you looking for?\n";
     std::getline(std::cin, globalString);
 
-    std::cout << "Program will look for \"" << globalString << "\"" << std::endl;
+    std::cout << "Program will look for \"" << globalString << "\"\n";
     std::vector<std::thread> vec;
     std::size_t threads = 2;
     for (std::size_t i = 0; i < threads; ++i) {
