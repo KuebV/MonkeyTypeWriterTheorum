@@ -32,14 +32,13 @@ void monkeyType(int threadID) {
     srand(threadID);
     // Amount of documents iterated through
     int documents = 1;
-
-
+    int averageTime = 0;
     while (!stringFound) {
 
         // Start a stopwatch
         auto stopwatchStart = std::chrono::high_resolution_clock::now();
         std::string str = "";
-        for (int i = 0; i < 32000; i++) {   
+        for (int i = 0; i < 32000; i++) {
             int randNum = rand() % 29;
             char randChar = arr[randNum];
             str += randChar;
@@ -49,10 +48,12 @@ void monkeyType(int threadID) {
         auto stopwatchStop = std::chrono::high_resolution_clock::now();
         auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(stopwatchStop - stopwatchStart);
 
-        // Updates the status every 1000 documents completed
-        if (documents % 1000 == 0)
-            std::cout << "[Monkey: " << threadID << "] has completed " << documents << " documents in " << microseconds.count() << " ms\n\n";
-
+        // You can change this up to 1,000,000 without causing a Max Integer Error
+        if (documents % 10000 == 0) {
+            std::cout << "Average Time over 10,000 Documents: " << averageTime / 10000 << "\nCompleted Documents:" << documents << "\n\n";
+            averageTime = 0;
+        }
+            
         //If the string is found, then stop the process.
         if (str.find(globalString) != std::string::npos) {
             std::ofstream file(generateFileName(documents, threadID, ".txt").c_str());
@@ -75,6 +76,8 @@ void monkeyType(int threadID) {
         }
 
         documents++;
+        averageTime += microseconds.count();
+        
     }
 }
 
@@ -86,7 +89,7 @@ int main()
 
     std::cout << "Program will look for \"" << globalString << "\"\n";
     std::vector<std::thread> vec;
-    std::size_t threads = 2;
+    std::size_t threads = 4;
     for (std::size_t i = 0; i < threads; ++i) {
         vec.push_back(std::thread(&monkeyType, i + 1));
 
@@ -97,6 +100,4 @@ int main()
     return 0;
 
 }
-
-
 
